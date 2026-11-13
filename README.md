@@ -49,6 +49,12 @@ yubild init && yubild build && ./build/debug/bin/hello
 cargo install --path .        # 或 cargo build --release 后把二进制放进 PATH
 ```
 
+Arch 用户可以在 AUR 里装：
+
+```bash
+yay -S yubild                 # 或 paru -S yubild
+```
+
 运行时需要 `python3` 和 `cmake`（配置层用 Python 求值，编译交给 CMake）。
 `yubild init` 会生成一个 `yubild.py` 和一个 `main.cpp`，随后 `build` 就能跑通。
 
