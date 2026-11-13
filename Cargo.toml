@@ -1,22 +1,37 @@
-[workspace]
-resolver = "2"
-members = [
-    "crates/yubild-core",
-    "crates/yubild-cmake",
-    "crates/yubild-cli",
-]
-
-[workspace.package]
+[package]
+name = "yubild"
 version = "0.1.0"
 edition = "2021"
+rust-version = "1.74"
 license = "MIT"
+description = "用 Python 写配置的 C++ 构建系统：生成 CMake，内置测试与变异测试"
 repository = "https://github.com/zhiyuHD/yubild"
 homepage = "https://github.com/zhiyuHD/yubild"
-description = "Yubild: a C++ build system with Python configuration and a CMake backend"
 keywords = ["build-system", "cpp", "cmake", "python", "mutation-testing"]
 categories = ["development-tools::build-utils"]
+readme = "README.md"
+# 发布到 crates.io 时只带上运行时真正需要的文件：
+# Python 配置层会被 include_str! 嵌进二进制，测试库头文件同理。
+include = [
+    "src/**/*.rs",
+    "python/**/*.py",
+    "include/*.h",
+    "Cargo.toml",
+    "README.md",
+    "LICENSE",
+    "DESIGN.md",
+    "docs/USAGE.md",
+]
 
-[workspace.dependencies]
+[lib]
+name = "yubild"
+path = "src/lib.rs"
+
+[[bin]]
+name = "yubild"
+path = "src/main.rs"
+
+[dependencies]
 anyhow = "1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"

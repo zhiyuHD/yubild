@@ -8,13 +8,13 @@ use std::time::Duration;
 
 use anyhow::{bail, Context, Result};
 
-use yubild_core::{Config, Target, TargetKind};
+use crate::model::{Config, Target, TargetKind};
 
-mod mutator;
-mod precheck;
-mod python;
-mod testrunner;
-mod util;
+pub(crate) mod mutator;
+pub(crate) mod precheck;
+pub(crate) mod python;
+pub(crate) mod testrunner;
+pub(crate) mod util;
 
 use testrunner::Painter;
 
@@ -83,7 +83,7 @@ const GEN_DIR_NAME: &str = "yubild";
 const TESTKIT_DIR_NAME: &str = "testkit";
 
 /// 测试库与运行器必须版本一致，直接编译进二进制，避免装错头文件。
-const TESTKIT_HEADER: &str = include_str!("../../../include/yubild_test.h");
+const TESTKIT_HEADER: &str = include_str!("../../include/yubild_test.h");
 
 /// 自动生成的测试入口：把实现宏定义在自己这个编译单元里。
 const TEST_MAIN_BODY: &str = "\
@@ -95,13 +95,15 @@ int main(int argc, char** argv) {
 }
 ";
 
-fn main() {
+/// 命令行的真正入口：返回进程退出码，由 `main.rs` 负责 exit。
+///
+/// 退出码约定：0 成功、1 测试失败、2 构建或环境错误（变异测试据此分类）。
+pub fn main_entry() -> i32 {
     match run() {
-        Ok(code) => std::process::exit(code),
+        Ok(code) => code,
         Err(e) => {
             eprintln!("yubild: error: {e:#}");
-            // 2 专门留给「构建/环境失败」，变异测试据此区别「杀死」与「构建失败」
-            std::process::exit(2);
+            2
         }
     }
 }
@@ -786,7 +788,7 @@ fn load_project(o: &Options) -> Result<(PathBuf, Config, Vec<usize>)> {
     if cfg.config_file.is_none() {
         cfg.config_file = Some(config.to_string_lossy().to_string());
     }
-    let order = yubild_core::resolve(&cfg)?;
+    let order = crate::resolve_targets(&cfg)?;
 
     if o.cross && !cfg.toolchain.is_cross() {
         bail!("--cross 需要 yubild.py 里用 yubild.toolchain(...) 声明目标工具链");
@@ -846,11 +848,11 @@ fn generate(root: &Path, cfg: &Config, order: &[usize], o: &Options) -> Result<P
     }
 
     let testkit_path = testkit_dir.to_string_lossy().to_string();
-    let emit_opts = yubild_cmake::EmitOptions {
+    let emit_opts = crate::cmake::EmitOptions {
         testkit_dir: Some(testkit_path.as_str()),
         test_main: Some(&test_mains),
     };
-    let text = yubild_cmake::emit(cfg, order, &emit_opts);
+    let text = crate::cmake::emit(cfg, order, &emit_opts);
 
     let path = gen_dir.join("CMakeLists.txt");
     if write_if_changed(&path, &text)? {

@@ -8,7 +8,7 @@ use std::process::{Command, Stdio};
 
 use anyhow::{bail, Context, Result};
 
-use yubild_core::Config;
+use crate::model::Config;
 
 const RUNNER: &str = "from yubild._runner import main; main()";
 
@@ -93,10 +93,8 @@ pub fn home() -> Result<PathBuf> {
         }
     }
 
-    bail!(
-        "找不到 yubild 的 Python 包目录（python/yubild/__init__.py）。\
-         可用环境变量 YUBILD_PYTHON_HOME 指向它"
-    )
+    // 都找不到时（例如 `cargo install` 之后），从二进制里解出内置的 Python 包
+    crate::assets::materialize()
 }
 
 /// 在子进程里求值配置，返回解析后的模型。

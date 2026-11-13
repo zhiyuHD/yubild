@@ -10,7 +10,7 @@
 use std::collections::HashMap;
 use std::fmt::Write as _;
 
-use yubild_core::{Config, DepKind, PostBuildStep, Target};
+use crate::model::{Config, DepKind, PostBuildStep, Target};
 
 /// 生成文件声明的最低 CMake 版本。CMake 4.x 不再兼容 < 3.5 的写法，这里留足余量。
 pub const MIN_CMAKE_VERSION: &str = "3.20";
@@ -500,7 +500,7 @@ fn sanitize_ident(name: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use yubild_core::*;
+    use crate::model::*;
 
     fn sample() -> Config {
         Config {
