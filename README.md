@@ -13,6 +13,7 @@
   <img src="https://icons.zhiyuhub.top/i/devices?color=146c2e&type=rounded&shape=pill&text=Linux%20%2F%20Windows" height="32" alt="Linux 与 Windows" />
   <img src="https://icons.zhiyuhub.top/i/science?color=8f4c00&type=rounded&shape=pill&text=%E5%86%85%E7%BD%AE%E6%B5%8B%E8%AF%95" height="32" alt="内置测试" />
   <img src="https://icons.zhiyuhub.top/i/bug_report?color=b3261e&type=rounded&shape=pill&text=%E5%8F%98%E5%BC%82%E6%B5%8B%E8%AF%95" height="32" alt="变异测试" />
+  <a href="https://crates.io/crates/yubild"><img src="https://icons.zhiyuhub.top/i/download?color=6750a4&type=rounded&shape=pill&text=cargo%20install%20yubild" height="32" alt="cargo install yubild" /></a>
 </p>
 
 ## 这是什么
@@ -34,13 +35,22 @@ Yubild 是一个 C++ 构建系统。在项目根目录写一个 `yubild.py`—�
 
 ## 三步开始
 
+已经装了 Rust 的话，直接从 crates.io 装：
+
 ```bash
-cargo build --release && export PATH="$PWD/target/release:$PATH"
+cargo install yubild
 mkdir myapp && cd myapp
 yubild init && yubild build && ./build/debug/bin/hello
 ```
 
-需要 `rustc`、`python3`、`cmake`。`yubild init` 会生成一个 `yubild.py` 和一个 `main.cpp`，随后 `build` 就能跑通。
+想从源码构建，把第一行换成：
+
+```bash
+cargo install --path .        # 或 cargo build --release 后把二进制放进 PATH
+```
+
+运行时需要 `python3` 和 `cmake`（配置层用 Python 求值，编译交给 CMake）。
+`yubild init` 会生成一个 `yubild.py` 和一个 `main.cpp`，随后 `build` 就能跑通。
 
 ## 一次配置长什么样
 
