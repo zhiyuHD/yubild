@@ -1,0 +1,16 @@
+[package]
+name = "yubild-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "yubild 命令行"
+
+[[bin]]
+name = "yubild"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+serde_json.workspace = true
+yubild-core = { path = "../yubild-core" }
+yubild-cmake = { path = "../yubild-cmake" }

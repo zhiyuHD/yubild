@@ -1,0 +1,25 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/yubild-core",
+    "crates/yubild-cmake",
+    "crates/yubild-cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/zhiyuHD/yubild"
+homepage = "https://github.com/zhiyuHD/yubild"
+description = "Yubild: a C++ build system with Python configuration and a CMake backend"
+keywords = ["build-system", "cpp", "cmake", "python", "mutation-testing"]
+categories = ["development-tools::build-utils"]
+
+[workspace.dependencies]
+anyhow = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[profile.release]
+opt-level = 2

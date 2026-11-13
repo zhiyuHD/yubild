@@ -1,0 +1,10 @@
+[package]
+name = "yubild-cmake"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Yubild 的 CMake 后端：模型 -> CMakeLists.txt"
+
+[dependencies]
+anyhow.workspace = true
+yubild-core = { path = "../yubild-core" }
